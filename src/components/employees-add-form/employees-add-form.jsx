@@ -7,11 +7,27 @@ class EmployeesAddForm extends Component {
     super(props);
     this.state = {
       name: '',
-      salary: ''
+      salary: '',
+      disabled: true
     }
   }
 
   onValueChange = (e) => {
+    const nameInputLength = document.querySelector('.name-input').value.length;
+    const salaryInputLength = document.querySelector('.salary-input').value.length;
+    if (nameInputLength >= 3 && salaryInputLength >= 3) {
+      this.setState(() => {
+        return {
+          disabled: false
+        }
+      })
+    } else {
+      this.setState(() => {
+        return {
+          disabled: true
+        }
+      })
+    }
     this.setState({
       [e.target.name]: e.target.value
     })
@@ -28,7 +44,7 @@ class EmployeesAddForm extends Component {
   }
 
   render() {
-    const {name, salary} = this.state;
+    const {name, salary, disabled} = this.state;
     return (
       <div className="app-add-form">
         <h3>Добавьте нового сотрудника</h3>
@@ -36,20 +52,22 @@ class EmployeesAddForm extends Component {
           className="add-form d-flex"
           onSubmit={this.onSubmit}>
           <input type="text"
-            className="form-control new-post-label"
+            className="form-control new-post-label name-input"
             placeholder="Как его зовут?"
             name ="name"
             value={name}  
             onChange={this.onValueChange}/>
           <input type="number"
-            className="form-control new-post-label"
+            className="form-control new-post-label salary-input"
             placeholder="З/П в $?"
             name ="salary"
             value={salary} 
             onChange={this.onValueChange}/>
 
-          <button type="submit"
-            className="btn btn-outline-light">
+          <button
+            type="submit"
+            className="btn btn-outline-light submitButton"
+            disabled={disabled}>
             Добавить
           </button>
         </form>
