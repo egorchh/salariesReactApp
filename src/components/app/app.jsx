@@ -5,6 +5,7 @@ import SearchPanel from '../search-panel/search-panel';
 import AppFilter from '../app-filter/app-filter';
 import EmployeesList from '../employees-list/employees-list';
 import EmployeesAddForm from '../employees-add-form/employees-add-form';
+import SaveButton from '../save-button/save-button';
 
 import './app.css';
 
@@ -49,6 +50,14 @@ class App extends Component {
     });
   }
 
+  onChangeSalary = (id, curSalary) => {
+    this.setState(({data}) => ({
+      data: data.map(item => {
+        return item.id === id ? {...item, salary: curSalary} : item
+      })
+    }));
+  }
+
   onToggleProp = (id, prop) => {
     this.setState(({data}) => ({
       data: data.map(item => {
@@ -86,6 +95,12 @@ class App extends Component {
     this.setState({filter});
   }
 
+  saveLocalData = () => {
+    this.setState(({data}) => {
+      localStorage.setItem('data', JSON.stringify(data));
+    })
+  }
+
   render() {
     const {data, term, filter} = this.state;
     const visibleData = this.filterPost(this.searchEmp(data, term), filter);
@@ -103,9 +118,13 @@ class App extends Component {
         <EmployeesList 
         data={visibleData} 
         onDelete={this.deleteItem}
-        onToggleProp={this.onToggleProp}/>
+        onToggleProp={this.onToggleProp}
+        onChangeSalary={this.onChangeSalary}
+        saveLocalData={this.saveLocalData}/>
         <EmployeesAddForm
         onAdd={this.addItem}/>
+
+        <SaveButton saveLocalData={this.saveLocalData}/>
       </div>
     )
   }
